@@ -13,7 +13,7 @@ mkdir -p ~/terraform/state_backups/$project_name
 cd  ~/terraform/$project_name
 
 # Clone the latest version of the repo to the directory we're in so we always have the latest code
-git clone https://github.com/rcsfc/terraform-aws-vpc-ec2-s30-automated.git .
+git clone https://github.com/rcsfc/terraform-aws-vpc-ec2-s3-automated.git .
 
 # Replace the default variable of CHANGEME with our project name so that all of the resources will be unique in our AWS account
 find . -type f -exec sed -i "s/CHANGEME/$project_name/g" {} +
