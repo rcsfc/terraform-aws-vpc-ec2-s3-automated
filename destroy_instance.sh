@@ -11,7 +11,7 @@ read project_name
 if [ -d ~/terraform/$project_name ];then
    cd ~/terraform/$project_name
    terraform destroy -auto-approve
-   rm -f ~/.ssh/$project_name_ssh_key.pub.pem
+   rm -f ~/.ssh/"$project_name"_ssh_key.pub.pem
    rm -fr ~/terraform/state_backups/$project_name
 else
    echo "Project directory not found. Exiting."
