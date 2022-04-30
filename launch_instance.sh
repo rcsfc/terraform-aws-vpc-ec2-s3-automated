@@ -15,7 +15,7 @@ if [ ! -d ~/terraform/$project_name ]; then
    git clone https://github.com/rcsfc/terraform-aws-vpc-ec2-s3-automated.git .
    find . -type f -print0 | xargs -0 sed -i "s/CHANGEME/$project_name/g"
    terraform init
-   terraform apply
+   terraform apply -auto-approve
 else
    echo "Project already exists. Exiting."
    exit 1
