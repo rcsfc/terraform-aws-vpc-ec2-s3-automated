@@ -8,23 +8,28 @@ echo "Enter the project name: "
 read project_name
 
 # Run our Bash commands
-mkdir -p ~/terraform/$project_name
-mkdir -p ~/terraform/state_backups/$project_name
-cd  ~/terraform/$project_name
-
-# Clone the latest version of the repo to the directory we're in so we always have the latest code
-git clone https://github.com/rcsfc/terraform-aws-vpc-ec2-s3-automated.git .
-
-# Replace the default variable of CHANGEME with our project name so that all of the resources will be unique in our AWS account
-find . -type f -exec sed -i "s/CHANGEME/$project_name/g" {} +
-
-# Initialize terrform and then run terraform apply to spin up the resources
-terraform init
-terraform apply
+if [ ! -d ~/terraform/$project_name ]; then
+   mkdir -p ~/terraform/$project_name
+   mkdir -p ~/terraform/state_backups/$project_name
+   cd  ~/terraform/$project_name
+   git clone https://github.com/rcsfc/terraform-aws-vpc-ec2-s3-automated.git .
+   find . -type f -print0 | xargs -0 sed -i "s/CHANGEME/$project_name/g"
+   terraform init
+   terraform apply
+else
+   echo "Project already exists. Exiting."
+   exit 1
+fi
 
 # Copy our state files to the backup folder so we can retrieve them later
 # This isn't recommended for production use and is here more to spark the idea that you should backup your state files (but in a secure way)
-find . -name "*.tfstate" -type f -exec cp {} ~/terraform/state_backups/$project_name/ \;
+if [ ! -d ~/terraform/state_backups/$project_name ]; then
+   find . -name "*.tfstate" -type f -exec cp {} ~/terraform/state_backups/$project_name/ \;
+else
+   echo "Project backup directory already exists. Did you already create this project?"
+   echo "Exiting without overwriting the files."
+   exit 1
+fi
 
 # Goodbye
 echo "Project $project_name has been deployed. See you next time!"
